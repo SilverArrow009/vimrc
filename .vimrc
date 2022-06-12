@@ -20,8 +20,8 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'vim-airline/vim-airline'
 " plugin vim-airline-themes
 Plugin 'vim-airline/vim-airline-themes'
-" plugin morhetz/gruvbox
-Plugin 'morhetz/gruvbox'
+" plugin /rafi/awesome-vim-colorschemes
+Plugin 'rafi/awesome-vim-colorschemes'
 " plugin pedrohdz/vim-yaml-folds
 Plugin 'pedrohdz/vim-yaml-folds'
 " plugin preservim/nerdtree
@@ -36,7 +36,16 @@ Plugin 'c.vim'
 Plugin 'vhda/verilog_systemverilog.vim'
 " plugin tpope/vim-obsession
 Plugin 'tpope/vim-obsession'
-
+" plugin ctrlpvim/ctrlp.vim
+Plugin 'ctrlpvim/ctrlp.vim'
+" plugin jiangmiao/auto-pairs
+Plugin 'jiangmiao/auto-pairs'
+" plugin dkprice/vim-easygrep
+Plugin 'dkprice/vim-easygrep'
+" plugin 'dense-analysis/ale'
+Plugin 'dense-analysis/ale'
+" plugin 'MattesGroeger/vim-bookmarks'
+Plugin 'MattesGroeger/vim-bookmarks'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -67,6 +76,7 @@ set textwidth=0
 set smartcase
 set incsearch
 set hlsearch
+set autochdir
 
 " set the global tag files here
 set tags=./tags;
@@ -79,18 +89,25 @@ set shiftwidth=2
 set softtabstop=2
 set expandtab
 set autoindent
+" set path
+set path=$PWD
 " highlight current line
 set cursorline
+" set line wrapping
+set wrap
 " backspace behaviour
 set backspace=indent,eol,start
-autocmd FileType verilog_systemverilog    setlocal expandtab shiftwidth=2 softtabstop=2 tags=./tags;,~/.vim/ctags/tags.uvm_1.2
+" Autocommands for buffer loading
+autocmd FileType verilog_systemverilog    setlocal expandtab shiftwidth=2 softtabstop=2 tags=./tags;,~/.vim/ctags/tags.uvm_1.2 foldmethod=syntax 
 autocmd FileType perl                     setlocal expandtab shiftwidth=2 softtabstop=2
 autocmd FileType c                        setlocal expandtab cindent shiftwidth=2 softtabstop=2 foldmethod=syntax
 autocmd FileType python                   setlocal expandtab cindent shiftwidth=2 softtabstop=2
 
-autocmd BufNewFile,BufRead *.sv,*.svh,*.sva,*.svi,*.vh,*.tie,*.cmd setfiletype verilog
-autocmd BufRead,BufNewFile *.json,*.jsn              setfiletype javascript
-autocmd BufNewfile,BufRead *.regspec,*.flatspec setfiletype yaml
+autocmd BufNewFile,BufRead *.sv,*.svh,*.sva,*.svi,*.vh,*.tie,*.cmd let b:ale_linters=['vlog'] |  setfiletype=verilog_systemverilog
+autocmd BufRead,BufNewFile *.spec setlocal filetype=verilog_systemverilog
+autocmd BufRead,BufNewFile *.json,*.jsn              setfiletype=javascript
+autocmd BufNewfile,BufRead *.regspec,*.flatspec setfiletype=yaml
+autocmd BufRead *.log set autoread | au CursorHold * checktime | call feedkeys("lh")
 
 syntax on
 
@@ -101,12 +118,15 @@ nnoremap <C-A> <NOP>
 " add mouse support
 set mouse=a
 " colorscheme related changes go here
-let g:gruvbox_contrast_dark="medium"
-colorscheme gruvbox
 set background=dark
+" gruvbox related options
+" let g:gruvbox_contrast_dark="medium"
+" colorscheme gruvbox
+colorscheme iceberg
 " Airline related options
-let AirlineTheme="base16"
+let AirlineTheme="iceberg"
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#ale#enabled = 1
 set updatetime=100
 " gitgutter changes here
 set signcolumn=yes 
@@ -114,11 +134,12 @@ set signcolumn=yes
 " Start NERDTree. If a file is specified, move the cursor to its window.
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * NERDTree | if argc() > 0 || exists("s:std_in") | wincmd p | endif
-" Start NERDTree when Vim starts with a directory argument.
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists('s:std_in') |
-    \ execute 'NERDTree' argv()[0] | wincmd p | enew | execute 'cd '.argv()[0] | endif
 " Exit Vim if NERDTree is the only window remaining in the only tab.
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+" Start NERDTree when Vim starts with a directory argument.
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists('s:std_in') |
+    \ execute 'NERDTree' argv()[0] | wincmd p | enew | endif
 " Sync Nerdtree with cd
 let g:NERDTreeChDirMode = 2
 " custom aliases go here
@@ -135,7 +156,18 @@ command Q q
 " custom keymaps go here
 let mapleader=","
 map <leader>o :NERDTreeToggle<CR>
-" if &diff
-"   colorscheme murphy
-" "  colorscheme delek
-" endif
+map <leader>l :ls<CR>:b
+" Lint related options
+let g:ale_verilog_vlog_options='-quiet -lint -sv -sv12compat'
+let g:ale_linters_explicit=1
+let g:ale_set_balloons=1
+let g:ale_sign_error = '●'
+let g:ale_sign_warning = '.'
+let g:ale_set_quickfix = 1
+let g:ale_completion_enabled = 1
+let g:ale_linters = {"c":["cc"], "cpp":["cc"], "verilog_systemverilog":["vlog"]}
+let g:ale_c_cc_executable = '/local/tools/installs/oss/gcc/9.4.0/bin/gcc'
+let g:ale_cpp_cc_executable = '/local/tools/installs/oss/gcc/9.4.0/bin/gcc'
+let g:ale_c_cc_options = '-Wall -I../../../include/defines -I../../../apis/common -I../../../apis/sysapi -I../../../include/spec/cfg0 -I../../../include/defines -I../../../apis/common -I../../../apis/sysapi -I../../../include/spec/cfg0 -std=c99 -fPIC -DIS_HOST=1'
+let g:ale_cpp_cc_options = '-I../../../include/defines -I../../../apis/common -I../../../apis/sysapi -I../../../include/spec/cfg0 -I../../../include/defines -I../../../apis/common -I../../../apis/sysapi -I../../../include/spec/cfg0 -fPIC -DIS_HOST=1'
+let g:ale_c_parse_makefile = 1

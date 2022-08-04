@@ -1,4 +1,3 @@
-set nocompatible              " be iMproved, required
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
@@ -12,40 +11,25 @@ Plugin 'VundleVim/Vundle.vim'
 
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
-" plugin on GitHub repo
 Plugin 'tpope/vim-fugitive'
-" plugin vim-gitgutter
 Plugin 'airblade/vim-gitgutter'
-" plugin vim-airline
 Plugin 'vim-airline/vim-airline'
-" plugin vim-airline-themes
 Plugin 'vim-airline/vim-airline-themes'
-" plugin /rafi/awesome-vim-colorschemes
 Plugin 'rafi/awesome-vim-colorschemes'
-" plugin pedrohdz/vim-yaml-folds
 Plugin 'pedrohdz/vim-yaml-folds'
-" plugin preservim/nerdtree
 Plugin 'preservim/nerdtree'
-" plugin Xuyuanp/nerdtree-git-plugin
 Plugin 'Xuyuanp/nerdtree-git-plugin'
-" plugin tpope/vim-unimpaired
 Plugin 'tpope/vim-unimpaired'
-" plugin c.vim
 Plugin 'c.vim'
-" plugin 'vhda/verilog_systemverilog.vim'
 Plugin 'vhda/verilog_systemverilog.vim'
-" plugin tpope/vim-obsession
 Plugin 'tpope/vim-obsession'
-" plugin ctrlpvim/ctrlp.vim
 Plugin 'ctrlpvim/ctrlp.vim'
-" plugin jiangmiao/auto-pairs
 Plugin 'jiangmiao/auto-pairs'
-" plugin dkprice/vim-easygrep
 Plugin 'dkprice/vim-easygrep'
-" plugin 'dense-analysis/ale'
 Plugin 'dense-analysis/ale'
-" plugin 'MattesGroeger/vim-bookmarks'
 Plugin 'MattesGroeger/vim-bookmarks'
+Plugin 'tomasiser/vim-code-dark'
+"Plugin 'ycm-core/YouCompleteMe'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -107,7 +91,7 @@ autocmd BufNewFile,BufRead *.sv,*.svh,*.sva,*.svi,*.vh,*.tie,*.cmd let b:ale_lin
 autocmd BufRead,BufNewFile *.spec setlocal filetype=verilog_systemverilog
 autocmd BufRead,BufNewFile *.json,*.jsn              setfiletype=javascript
 autocmd BufNewfile,BufRead *.regspec,*.flatspec setfiletype=yaml
-autocmd BufRead *.log set autoread | au CursorHold * checktime | call feedkeys("lh")
+autocmd BufRead *.log set autoread | au CursorHold * checktime
 
 syntax on
 
@@ -122,8 +106,14 @@ set background=dark
 " gruvbox related options
 " let g:gruvbox_contrast_dark="medium"
 " colorscheme gruvbox
-colorscheme iceberg
-" Airline related options
+" colorscheme iceberg
+colorscheme codedark
+" Setting nice vsplits
+set fillchars=stl:^,stlnc:=,vert:\ ,fold:-,diff:-
+highlight VertSplit ctermbg=6 ctermfg=0
+highlight NonText ctermfg=bg
+"
+"" Airline related options
 let AirlineTheme="iceberg"
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#ale#enabled = 1
@@ -157,6 +147,7 @@ command Q q
 let mapleader=","
 map <leader>o :NERDTreeToggle<CR>
 map <leader>l :ls<CR>:b
+let g:ctrlp_cmd = 'CtrlPMixed'
 " Lint related options
 let g:ale_verilog_vlog_options='-quiet -lint -sv -sv12compat'
 let g:ale_linters_explicit=1
@@ -164,8 +155,8 @@ let g:ale_set_balloons=1
 let g:ale_sign_error = '●'
 let g:ale_sign_warning = '.'
 let g:ale_set_quickfix = 1
-let g:ale_completion_enabled = 1
-let g:ale_linters = {"c":["cc"], "cpp":["cc"], "verilog_systemverilog":["vlog"]}
+" let g:ale_completion_enabled = 1
+let g:ale_linters = {"c":["cc"], "cpp":["cc"], "verilog_systemverilog":["vlog"], "python":["pylint"]}
 let g:ale_c_cc_executable = '/local/tools/installs/oss/gcc/9.4.0/bin/gcc'
 let g:ale_cpp_cc_executable = '/local/tools/installs/oss/gcc/9.4.0/bin/gcc'
 let g:ale_c_cc_options = '-Wall -I../../../include/defines -I../../../apis/common -I../../../apis/sysapi -I../../../include/spec/cfg0 -I../../../include/defines -I../../../apis/common -I../../../apis/sysapi -I../../../include/spec/cfg0 -std=c99 -fPIC -DIS_HOST=1'

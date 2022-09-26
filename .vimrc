@@ -29,6 +29,10 @@ Plugin 'dkprice/vim-easygrep'
 Plugin 'dense-analysis/ale'
 Plugin 'MattesGroeger/vim-bookmarks'
 Plugin 'tomasiser/vim-code-dark'
+Plugin 'chrisbra/NrrwRgn'
+Plugin 'tpope/vim-commentary'
+Plugin 'vim-scripts/LargeFile'
+Plugin 'lervag/vimtex'
 "Plugin 'ycm-core/YouCompleteMe'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -87,7 +91,7 @@ autocmd FileType perl                     setlocal expandtab shiftwidth=2 softta
 autocmd FileType c                        setlocal expandtab cindent shiftwidth=2 softtabstop=2 foldmethod=syntax
 autocmd FileType python                   setlocal expandtab cindent shiftwidth=2 softtabstop=2
 
-autocmd BufNewFile,BufRead *.sv,*.svh,*.sva,*.svi,*.vh,*.tie,*.cmd let b:ale_linters=['vlog'] |  setfiletype=verilog_systemverilog
+autocmd BufNewFile,BufRead *.sv,*.svh,*.sva,*.svi,*.vh,*.tie,*.cmd setfiletype=verilog_systemverilog
 autocmd BufRead,BufNewFile *.spec setlocal filetype=verilog_systemverilog
 autocmd BufRead,BufNewFile *.json,*.jsn              setfiletype=javascript
 autocmd BufNewfile,BufRead *.regspec,*.flatspec setfiletype=yaml
@@ -99,6 +103,7 @@ nnoremap <F2> <C-W><C-W>
 nnoremap <F3> <C-W>o
 nnoremap <C-X> <NOP>
 nnoremap <C-A> <NOP>
+nnoremap D diw
 " add mouse support
 set mouse=a
 " colorscheme related changes go here
@@ -109,14 +114,21 @@ set background=dark
 " colorscheme iceberg
 colorscheme codedark
 " Setting nice vsplits
-set fillchars=stl:^,stlnc:=,vert:\ ,fold:-,diff:-
-highlight VertSplit ctermbg=6 ctermfg=0
-highlight NonText ctermfg=bg
-"
-"" Airline related options
+set fillchars=vert:\ ,fold:\ ,diff:-
+highlight VertSplit ctermbg=6 ctermfg=0 guibg=cyan guifg=cyan
+highlight EndOfBuffer ctermfg=bg guifg=bg
+highlight Folded ctermfg=grey guifg=grey cterm=NONE gui=NONE
+" GUI related options
+set guifont=LiterationMonoPowerline:h14
+set linespace=8
+set guioptions=
+" Large File related options
+let g:LargeFile = 1000
+" Airline related options
 let AirlineTheme="iceberg"
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#ale#enabled = 1
+let g:airline_powerline_fonts = 1
 set updatetime=100
 " gitgutter changes here
 set signcolumn=yes 
@@ -156,7 +168,7 @@ let g:ale_sign_error = '●'
 let g:ale_sign_warning = '.'
 let g:ale_set_quickfix = 1
 " let g:ale_completion_enabled = 1
-let g:ale_linters = {"c":["cc"], "cpp":["cc"], "verilog_systemverilog":["vlog"], "python":["pylint"]}
+let g:ale_linters = {"c":["cc"], "cpp":["cc"], "python":["pylint"]}
 let g:ale_c_cc_executable = '/local/tools/installs/oss/gcc/9.4.0/bin/gcc'
 let g:ale_cpp_cc_executable = '/local/tools/installs/oss/gcc/9.4.0/bin/gcc'
 let g:ale_c_cc_options = '-Wall -I../../../include/defines -I../../../apis/common -I../../../apis/sysapi -I../../../include/spec/cfg0 -I../../../include/defines -I../../../apis/common -I../../../apis/sysapi -I../../../include/spec/cfg0 -std=c99 -fPIC -DIS_HOST=1'

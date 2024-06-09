@@ -103,3 +103,5 @@ source $ZSH/oh-my-zsh.sh
 # User specific config here
 export EDITOR=/usr/bin/nvim
 export VISUAL=/usr/bin/nvim
+
+export PATH="$PATH:/home/vasanth/.local/bin"
